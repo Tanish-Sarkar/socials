@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Bento Grid</title>
+    <style>
+        :root {
+            --dark-bg: #0F172A;
+            --card-bg: #1E293B;
+            --accent: #7C3AED;
+            --accent-light: #8B5CF6;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --success: #10B981;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .bento-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1000px;
+            width: 100%;
+            aspect-ratio: 1/1;
+        }
+
+        .bento-item {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .bento-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba(124, 58, 237, 0.5);
+        }
+
+        .bento-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bento-item:hover::before {
+            opacity: 1;
+        }
+
+        .icon-container {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            background: rgba(124, 58, 237, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .bento-item:hover .icon-container {
+            background: rgba(124, 58, 237, 0.2);
+            transform: scale(1.1);
+        }
+
+        .bento-item i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .bento-item h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(90deg, var(--text-primary), #CBD5E1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .bento-item p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .status {
+            margin-top: auto;
+            font-size: 0.75rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+
+        .item-1 {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+        }
+
+        .item-2 {
+            grid-column: 2 / 4;
+            grid-row: 1 / 2;
+        }
+
+        .item-3 {
+            grid-column: 1 / 3;
+            grid-row: 2 / 3;
+        }
+
+        .item-4 {
+            grid-column: 3 / 4;
+            grid-row: 2 / 4;
+        }
+
+        .item-5 {
+            grid-column: 1 / 2;
+            grid-row: 3 / 4;
+        }
+
+        .item-6 {
+            grid-column: 2 / 3;
+            grid-row: 3 / 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .bento-item:hover i {
+            animation: float 2s ease-in-out infinite;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .bento-container {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: repeat(4, 1fr);
+                aspect-ratio: auto;
+            }
+
+            .item-1 { grid-column: 1 / 2; grid-row: 1 / 2; }
+            .item-2 { grid-column: 2 / 3; grid-row: 1 / 2; }
+            .item-3 { grid-column: 1 / 2; grid-row: 2 / 3; }
+            .item-4 { grid-column: 2 / 3; grid-row: 2 / 4; }
+            .item-5 { grid-column: 1 / 2; grid-row: 3 / 4; }
+            .item-6 { grid-column: 1 / 2; grid-row: 4 / 5; }
+        }
+
+        @media (max-width: 480px) {
+            .bento-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(6, 1fr);
+            }
+
+            .item-1, .item-2, .item-3, .item-4, .item-5, .item-6 {
+                grid-column: 1 / 2;
+            }
+
+            .item-1 { grid-row: 1 / 2; }
+            .item-2 { grid-row: 2 / 3; }
+            .item-3 { grid-row: 3 / 4; }
+            .item-4 { grid-row: 4 / 5; }
+            .item-5 { grid-row: 5 / 6; }
+            .item-6 { grid-row: 6 / 7; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="bento-container">
+        <a href="https://github.com/Tanish-Sarkar" target="_blank" class="bento-item item-1">
+            <div class="icon-container">
+                <i class="fab fa-github"></i>
+            </div>
+            <h3>GitHub</h3>
+            <p>Explore my repositories and open-source contributions with full code access.</p>
+            <div class="status">Active</div>
+        </a>
+        
+        <a href="https://www.linkedin.com/in/tanish-sarkar/" target="_blank" class="bento-item item-2">
+            <div class="icon-container">
+                <i class="fab fa-linkedin-in"></i>
+            </div>
+            <h3>LinkedIn</h3>
+            <p>Professional network showcasing my career journey and achievements.</p>
+            <div class="status">Active</div>
+        </a>
+        
+        <a href="https://x.com/sarkar19915" target="_blank" class="bento-item item-3">
+            <div class="icon-container">
+                <i class="fab fa-x"></i>
+            </div>
+            <h3>Twitter</h3>
+            <p>Follow my tech thoughts, updates, and industry discussions in real-time.</p>
+            <div class="status">Active</div>
+        </a>
+        
+        <a href="https://www.kaggle.com/tanish2808" target="_blank" class="bento-item item-4">
+            <div class="icon-container">
+                <i class="fab fa-kaggle"></i>
+            </div>
+            <h3>Kaggle</h3>
+            <p>Data science projects, competition entries, and machine learning experiments.</p>
+            <div class="status">Active</div>
+        </a>
+        
+        <a href="https://leetcode.com/u/tanishinfo28/" target="_blank" class="bento-item item-5">
+            <div class="icon-container">
+                <i class="fas fa-laptop-code"></i>
+            </div>
+            <h3>LeetCode</h3>
+            <p>Coding challenge solutions demonstrating problem-solving skills.</p>
+            <div class="status">Active</div>
+        </a>
+        
+        <div class="bento-item item-6">
+            Digital Presence
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const items = document.querySelectorAll('.bento-item');
+            
+            // Add slight delay to each item's animation
+            items.forEach((item, index) => {
+                item.style.transitionDelay = `${index * 0.05}s`;
+                
+                // Add ripple effect on click
+                item.addEventListener('click', function(e) {
+                    if(this.tagName === 'A') {
+                        e.preventDefault();
+                        const link = this.href;
+                        
+                        // Create ripple
+                        const ripple = document.createElement('span');
+                        ripple.className = 'ripple';
+                        this.appendChild(ripple);
+                        
+                        // Get click position
+                        const rect = this.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        // Position ripple
+                        ripple.style.left = `${x}px`;
+                        ripple.style.top = `${y}px`;
+                        
+                        // Remove ripple after animation
+                        setTimeout(() => {
+                            ripple.remove();
+                            window.open(link, '_blank');
+                        }, 600);
+                    }
+                });
+            });
+            
+            // Add mouse parallax effect
+            document.querySelector('.bento-container').addEventListener('mousemove', function(e) {
+                const container = this;
+                const containerRect = container.getBoundingClientRect();
+                const centerX = containerRect.left + containerRect.width / 2;
+                const centerY = containerRect.top + containerRect.height / 2;
+                
+                const mouseX = e.clientX - centerX;
+                const mouseY = e.clientY - centerY;
+                
+                items.forEach(item => {
+                    const speed = 0.03;
+                    const itemRect = item.getBoundingClientRect();
+                    const itemCenterX = itemRect.left + itemRect.width / 2;
+                    const itemCenterY = itemRect.top + itemRect.height / 2;
+                    
+                    const distanceX = itemCenterX - centerX;
+                    const distanceY = itemCenterY - centerY;
+                    
+                    const moveX = (mouseX - distanceX) * speed;
+                    const moveY = (mouseY - distanceY) * speed;
+                    
+                    item.style.transform = `translate(${moveX}px, ${moveY}px) translateY(-5px)`;
+                });
+            });
+            
+            // Reset position when mouse leaves
+            document.querySelector('.bento-container').addEventListener('mouseleave', function() {
+                items.forEach(item => {
+                    item.style.transform = 'translate(0, 0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
